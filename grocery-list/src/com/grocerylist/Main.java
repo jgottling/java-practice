@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
   private static final Scanner scanner = new Scanner(System.in);
-  private static final GroceryList myList = new GroceryList();
+  private static final GroceryList myList = new GroceryList("My list");
   private static boolean continueRunning = true;
   private static boolean firstTime = true;
 
@@ -40,7 +40,9 @@ public class Main {
             + "2. Add item \n"
             + "3. Remove item \n"
             + "4. Modify item \n"
-            + "5. Exit \n");
+            + "5. Get item details \n"
+            + "6. Filter items by first letter \n"
+            + "7. Exit \n");
   }
 
   private static void processChoice(int option) {
@@ -52,10 +54,18 @@ public class Main {
         addItem();
         break;
       case 3:
+        removeItem();
         break;
       case 4:
+        modifyItem();
         break;
       case 5:
+        getItem();
+        break;
+      case 6:
+        filterItem();
+        break;
+      case 7:
       default:
         System.out.println("Goodbye!");
         scanner.close();
@@ -68,6 +78,28 @@ public class Main {
   }
 
   private static void addItem() {
+    myList.addItem(inputCompleteItem());
+  }
+
+  private static void removeItem() {
+    myList.removeItem(inputItemName());
+  }
+
+  private static void modifyItem() {
+    myList.modifyItem(inputCompleteItem());
+  }
+
+  private static void getItem() {
+    System.out.println(myList.getItem(inputItemName()));
+  }
+
+  private static void filterItem() {
+    System.out.print("Enter a letter to filter: ");
+    String letter = scanner.nextLine();
+    System.out.println(myList.filterListByLetter(letter));
+  }
+
+  private static Item inputCompleteItem() {
     System.out.print("Enter item name: ");
     String name = scanner.nextLine();
     System.out.print("Enter item price: ");
@@ -77,6 +109,12 @@ public class Main {
     int quantity = scanner.nextInt();
     scanner.nextLine();
 
-    myList.addItem(new Item(name, quantity, itemPrice));
+    return new Item(name, quantity, itemPrice);
+  }
+
+  private static Item inputItemName() {
+    System.out.print("Enter item name: ");
+    String name = scanner.nextLine();
+    return new Item(name);
   }
 }

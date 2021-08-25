@@ -2,22 +2,18 @@ package com.grocerylist;
 
 public class Item {
 
-  private String name;
+  private final String name;
+  private final double price;
   private int quantity;
-  private double price;
+
+  public Item(String name) {
+    this(name, 0, 0);
+  }
 
   public Item(String name, int quantity, double price) {
     this.name = name;
     this.quantity = quantity;
     this.price = price;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public int getQuantity() {
@@ -32,8 +28,11 @@ public class Item {
     return this.price;
   }
 
-  public void setPrice(double price) {
-    this.price = price;
+  @Override
+  public boolean equals(Object item) {
+
+    if (item.getClass() != this.getClass()) return false;
+    return this.getName().compareTo(((Item) item).getName()) == 0;
   }
 
   @Override
@@ -47,5 +46,9 @@ public class Item {
         + ", price="
         + this.price
         + '}';
+  }
+
+  public String getName() {
+    return this.name;
   }
 }
