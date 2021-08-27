@@ -1,13 +1,11 @@
 package com.percolation;
 
-import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Percolation {
 
-  private final int[][] grid;
   private final WeightedQuickUnionUF unionFind;
   private final HashMap<Integer, Site> siteList;
   private final int size, maxSize;
@@ -15,55 +13,65 @@ public class Percolation {
   // creates n-by-n grid, with all sites initially blocked
   // i are rows, j are columns
   // border sites with (1..n,1),(1..n,n),(1,1..n)
-  // 1 is open, 0 is closed, -1 is full
   public Percolation(int n) {
-    this.grid = new int[n][n];
     this.siteList = new HashMap<>();
     this.size = n;
-    this.maxSize = n * n + 1;
+    this.maxSize = n * n + 2;
     this.unionFind = new WeightedQuickUnionUF(this.maxSize);
     int arrayCounter = 1;
 
+    System.out.println("MaxSize: " + this.maxSize);
+    System.out.println("Nodes count: " + this.unionFind.count());
+
     this.siteList.put(0, new Site(0, 1, 0, SiteStatus.OPEN));
 
-    for (int i = 0; i < this.grid.length; i++) {
-      for (int j = 0; j < this.grid[i].length; j++) {
-        this.grid[i][j] = 0;
-        this.siteList.put(arrayCounter, new Site(i + 1, j + 1, arrayCounter));
+    for (int i = 1; i <= this.size; i++) {
+      for (int j = 1; j <= this.size; j++) {
+        this.siteList.put(arrayCounter, new Site(i, j, arrayCounter));
         arrayCounter++;
       }
     }
+
     this.siteList.put(arrayCounter, new Site(n + 1, 1, arrayCounter, SiteStatus.OPEN));
+
+    // this.printHashMap();
+    // this.printGrid();
+  }
+
+  private void printHashMap() {
     for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
       System.out.println("Key: " + entry.getKey() + " => value: " + entry.getValue());
     }
+    System.out.println();
   }
 
   private void printGrid() {
-    for (int[] ints : this.grid) {
-      for (int anInt : ints) {
-        System.out.print(anInt + " ");
+    for (int i = 1; i <= this.size; i++) {
+      for (int j = 1; j <= this.size; j++) {
+        System.out.print(this.getSite(i, j).getSiteStatus() + " ");
       }
-      System.out.println(); // printing of new line
+      System.out.println();
     }
+    System.out.println();
+  }
+
+  private void printUnionFind() {
+    for (int i = 0; i <= this.maxSize - 1; i++) {
+      System.out.println("Node: " + i + " Root: " + this.unionFind.find(i));
+    }
+    System.out.println();
   }
 
   // opens the site (row, col) if it is not open already
   public void open(int row, int col) {
-    if (this.grid[row - 1][col - 1] == 0) {
-      this.grid[row - 1][col - 1] = 1;
-      this.getSite(row, col).setSiteStatus(SiteStatus.OPEN);
+    Site site = this.getSite(row, col);
+    if (site.getSiteStatus() == SiteStatus.CLOSED) {
+      site.setSiteStatus(SiteStatus.OPEN);
+      this.connectWithNeighbours(row, col, site);
     }
-    this.connectWithNeighbours(row, col);
-  }
-
-  private int getSiteNode(int row, int col) {
-    int found = -1;
-    for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
-      Site entrySite = entry.getValue();
-      if (entrySite.getRow() == row && entrySite.getCol() == col) found = entry.getKey();
-    }
-    return found;
+    // this.printHashMap();
+    // this.printUnionFind();
+    // this.printGrid();
   }
 
   private Site getSite(int row, int col) {
@@ -75,7 +83,66 @@ public class Percolation {
     return found;
   }
 
-  private void connectWithNeighbours(int row, int col) {}
+  private void connectWithNeighbours(int row, int col, Site connectingSite) {
+    int connectingNode = connectingSite.getNodeNumber();
+    // topVirtualNode
+    if (row == 1) {
+      this.connectNodes(0, connectingNode);
+      this.siteList.get(0).setSiteStatus(SiteStatus.FULL);
+      connectingSite.setSiteStatus(SiteStatus.FULL);
+    }
+    // bottomVirtualNode
+    if (row == this.size) {
+      this.connectNodes(connectingNode, this.maxSize - 1);
+      connectingSite.setSiteStatus(SiteStatus.FULL);
+      this.siteList.get(this.maxSize - 1).setSiteStatus(SiteStatus.FULL);
+    }
+    // up
+    if (row - 1 >= 1) {
+      Site upSite = this.getSite(row - 1, col);
+      if (upSite.siteStatus != SiteStatus.CLOSED) {
+        this.connectNodes(connectingNode, upSite.getNodeNumber());
+        connectingSite.setSiteStatus(SiteStatus.FULL);
+        upSite.setSiteStatus(SiteStatus.FULL);
+      }
+    }
+    // down
+    if (row + 1 <= this.size) {
+      Site downSite = this.getSite(row + 1, col);
+      if (downSite.siteStatus != SiteStatus.CLOSED) {
+        this.connectNodes(connectingNode, downSite.getNodeNumber());
+        connectingSite.setSiteStatus(SiteStatus.FULL);
+        downSite.setSiteStatus(SiteStatus.FULL);
+      }
+    }
+    // left
+    if (col - 1 >= 1) {
+      Site leftSite = this.getSite(row, col - 1);
+      if (leftSite.siteStatus != SiteStatus.CLOSED) {
+        this.connectNodes(connectingNode, leftSite.getNodeNumber());
+        connectingSite.setSiteStatus(SiteStatus.FULL);
+        leftSite.setSiteStatus(SiteStatus.FULL);
+      }
+    }
+    // right
+    if (col + 1 <= this.size) {
+      Site rightSite = this.getSite(row, col + 1);
+      if (rightSite.siteStatus != SiteStatus.CLOSED) {
+        this.connectNodes(connectingNode, rightSite.getNodeNumber());
+        connectingSite.setSiteStatus(SiteStatus.FULL);
+        rightSite.setSiteStatus(SiteStatus.FULL);
+      }
+    }
+    //    this.printGrid();
+    //    this.printHashMap();
+  }
+
+  private void connectNodes(int node1, int node2) {
+    // System.out.println("Connecting Node: " + node1 + " with Node: " + node2 + "...");
+    if (node1 < node2) this.unionFind.union(node1, node2);
+    else if (node1 > node2) this.unionFind.union(node2, node1);
+    // System.out.println();
+  }
 
   // is the site (row, col) open?
   public boolean isOpen(int row, int col) {
@@ -89,20 +156,18 @@ public class Percolation {
 
   // returns the number of open sites
   public int numberOfOpenSites() {
-
     int counter = 0;
-
     for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
       Site entrySite = entry.getValue();
       if (entrySite.siteStatus == SiteStatus.OPEN) counter++;
     }
-
     return counter;
   }
 
   // does the system percolate?
   public boolean percolates() {
-    return this.unionFind.find(0) == this.unionFind.find(this.size ^ 2 + 2);
+    //    this.printGrid();
+    return this.unionFind.find(0) == this.unionFind.find(this.maxSize - 1);
   }
 
   // check if site is (1,1), (1,n), (n,1), (n,n)
@@ -117,17 +182,13 @@ public class Percolation {
     FULL
   }
 
-  private class Site implements Comparable<Site> {
-    private final Point2D coordinate;
-    private final int nodeNumber;
+  private class Site {
+    private final int row, col, nodeNumber;
     private SiteStatus siteStatus;
 
-    Site(int row, int col) {
-      this(row, col, -1, SiteStatus.CLOSED);
-    }
-
     Site(int row, int col, int nodeNumber, SiteStatus siteStatus) {
-      this.coordinate = new Point2D(row, col);
+      this.row = row;
+      this.col = col;
       this.nodeNumber = nodeNumber;
       this.siteStatus = siteStatus;
     }
@@ -148,32 +209,21 @@ public class Percolation {
       this.siteStatus = newStatus;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-      if (obj.getClass() != Site.class) return false;
-      return this.coordinate.equals(((Site) obj).coordinate);
-    }
-
     protected int getCol() {
-      return (int) this.coordinate.x();
+      return this.col;
     }
 
     protected int getRow() {
-      return (int) this.coordinate.y();
-    }
-
-    @Override
-    public int compareTo(Site site) {
-      return this.coordinate.compareTo(site.coordinate);
+      return this.row;
     }
 
     @Override
     public String toString() {
       return "Site {"
           + "coordinate= ("
-          + this.getCol()
-          + ","
           + this.getRow()
+          + ","
+          + this.getCol()
           + "), nodeNumber= "
           + this.nodeNumber
           + ", siteStatus= "
