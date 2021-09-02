@@ -19,8 +19,7 @@ package com.percolation;
  ******************************************************************************/
 
 import edu.princeton.cs.algs4.StdDraw;
-
-import java.awt.*;
+import java.awt.Font;
 
 public class PercolationVisualizer {
 

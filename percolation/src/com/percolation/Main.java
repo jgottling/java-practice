@@ -2,6 +2,7 @@ package com.percolation;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public class Main {
   // delay in milliseconds (controls animation speed)
@@ -13,11 +14,13 @@ public class Main {
 
     System.out.println("Percolation system of " + n + "x" + n);
 
+    Stopwatch stopWatch = new Stopwatch();
+
     // turn on animation mode
     StdDraw.enableDoubleBuffering();
 
     // repeatedly read in sites to open and draw resulting system
-    Percolation perc = new Percolation(n);
+    Percolation perc = new PercolationWeightedUnionFindGrid(n);
     // perc.open(1, 1);
     // perc.open(2, 1);
     // perc.open(3, 1);
@@ -38,6 +41,8 @@ public class Main {
 
     if (perc.percolates()) System.out.println("System percolates");
     else System.out.println("System doesn't percolate");
+
+    System.out.println("Elapsed time: " + stopWatch.elapsedTime() + " seconds");
 
     System.exit(0);
   }

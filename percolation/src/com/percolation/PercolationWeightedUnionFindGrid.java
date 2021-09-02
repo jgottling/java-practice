@@ -1,53 +1,43 @@
 package com.percolation;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
-public class PercolationWeightedUnionFindHashMap implements Percolation {
-
+public class PercolationWeightedUnionFindGrid implements Percolation {
   private final WeightedQuickUnionUF unionFind;
-  private final HashMap<Integer, Site> siteList;
+  private final Object[][] siteGrid;
   private final int size, maxSize;
 
   // creates n-by-n grid, with all sites initially blocked
   // i are rows, j are columns
   // border sites with (1..n,1),(1..n,n),(1,1..n)
-  public PercolationWeightedUnionFindHashMap(int n) {
-    this.siteList = new HashMap<>();
+  public PercolationWeightedUnionFindGrid(int n) {
+    this.siteGrid = new Object[n + 2][n];
     this.size = n;
     this.maxSize = n * n + 2;
     this.unionFind = new WeightedQuickUnionUF(this.maxSize);
     int arrayCounter = 1;
 
+    System.out.println("Size: " + n);
     System.out.println("MaxSize: " + this.maxSize);
     System.out.println("Nodes count: " + this.unionFind.count());
 
-    this.siteList.put(0, new Site(0, 1, 0, SiteStatus.OPEN));
+    this.siteGrid[0][0] = new Site(0, 1, 0, SiteStatus.OPEN);
 
     for (int i = 1; i <= this.size; i++) {
-      for (int j = 1; j <= this.size; j++) {
-        this.siteList.put(arrayCounter, new Site(i, j, arrayCounter));
+      for (int j = 0; j < this.size; j++) {
+        this.siteGrid[i][j] = new Site(i, j + 1, arrayCounter);
         arrayCounter++;
       }
     }
 
-    this.siteList.put(arrayCounter, new Site(n + 1, 1, arrayCounter, SiteStatus.OPEN));
+    this.siteGrid[n + 1][0] = new Site(n + 1, 1, arrayCounter, SiteStatus.OPEN);
 
-    // this.printHashMap();
     // this.printGrid();
-  }
-
-  private void printHashMap() {
-    for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
-      System.out.println("Key: " + entry.getKey() + " => value: " + entry.getValue());
-    }
-    System.out.println();
   }
 
   private void printGrid() {
     for (int i = 1; i <= this.size; i++) {
-      for (int j = 1; j <= this.size; j++) {
+      for (int j = 0; j < this.size; j++) {
         System.out.print(this.getSite(i, j).getSiteStatus() + " ");
       }
       System.out.println();
@@ -68,36 +58,35 @@ public class PercolationWeightedUnionFindHashMap implements Percolation {
     Site site = this.getSite(row, col);
     if (site.getSiteStatus() == SiteStatus.CLOSED) {
       site.setSiteStatus(SiteStatus.OPEN);
-      this.connectWithNeighbours(row, col, site);
+      this.connectWithNeighbours(site);
     }
-    // this.printHashMap();
     // this.printUnionFind();
     // this.printGrid();
   }
 
   private Site getSite(int row, int col) {
-    Site found = null;
-    for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
-      Site entrySite = entry.getValue();
-      if (entrySite.getRow() == row && entrySite.getCol() == col) found = entrySite;
-    }
-    return found;
+    return (Site) this.siteGrid[row][col - 1];
   }
 
-  private void connectWithNeighbours(int row, int col, Site connectingSite) {
+  private void connectWithNeighbours(Site connectingSite) {
+    int row = connectingSite.getRow();
+    int col = connectingSite.getCol();
     int connectingNode = connectingSite.getNodeNumber();
+
     // topVirtualNode
     if (row == 1) {
       this.connectNodes(0, connectingNode);
-      this.siteList.get(0).setSiteStatus(SiteStatus.FULL);
+      this.getSite(0, 1).setSiteStatus(SiteStatus.FULL);
       connectingSite.setSiteStatus(SiteStatus.FULL);
     }
+
     // bottomVirtualNode
     if (row == this.size) {
       this.connectNodes(connectingNode, this.maxSize - 1);
       connectingSite.setSiteStatus(SiteStatus.FULL);
-      this.siteList.get(this.maxSize - 1).setSiteStatus(SiteStatus.FULL);
+      this.getSite(this.size + 1, 1).setSiteStatus(SiteStatus.FULL);
     }
+
     // up
     if (row - 1 >= 1) {
       Site upSite = this.getSite(row - 1, col);
@@ -135,7 +124,6 @@ public class PercolationWeightedUnionFindHashMap implements Percolation {
       }
     }
     //    this.printGrid();
-    //    this.printHashMap();
   }
 
   private void connectNodes(int node1, int node2) {
@@ -158,10 +146,13 @@ public class PercolationWeightedUnionFindHashMap implements Percolation {
   // returns the number of open sites
   public int numberOfOpenSites() {
     int counter = 0;
-    for (Entry<Integer, Site> entry : this.siteList.entrySet()) {
-      Site entrySite = entry.getValue();
-      if (entrySite.getSiteStatus() == SiteStatus.OPEN) counter++;
+
+    for (int i = 1; i <= this.size; i++) {
+      for (int j = 1; j <= this.size; j++) {
+        if (this.getSite(i, j).getSiteStatus() == SiteStatus.OPEN) counter++;
+      }
     }
+
     return counter;
   }
 
