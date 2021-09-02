@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class Percolation {
+public class PercolationWeightedUnionFind implements Percolation {
 
   private final WeightedQuickUnionUF unionFind;
   private final HashMap<Integer, Site> siteList;
@@ -13,7 +13,7 @@ public class Percolation {
   // creates n-by-n grid, with all sites initially blocked
   // i are rows, j are columns
   // border sites with (1..n,1),(1..n,n),(1,1..n)
-  public Percolation(int n) {
+  public PercolationWeightedUnionFind(int n) {
     this.siteList = new HashMap<>();
     this.size = n;
     this.maxSize = n * n + 2;
@@ -63,6 +63,7 @@ public class Percolation {
   }
 
   // opens the site (row, col) if it is not open already
+  @Override
   public void open(int row, int col) {
     Site site = this.getSite(row, col);
     if (site.getSiteStatus() == SiteStatus.CLOSED) {
@@ -144,12 +145,12 @@ public class Percolation {
     // System.out.println();
   }
 
-  // is the site (row, col) open?
+  @Override
   public boolean isOpen(int row, int col) {
     return this.getSite(row, col).getSiteStatus() == SiteStatus.OPEN;
   }
 
-  // is the site (row, col) full?
+  @Override
   public boolean isFull(int row, int col) {
     return this.getSite(row, col).getSiteStatus() == SiteStatus.FULL;
   }
@@ -164,7 +165,7 @@ public class Percolation {
     return counter;
   }
 
-  // does the system percolate?
+  @Override
   public boolean percolates() {
     //    this.printGrid();
     return this.unionFind.find(0) == this.unionFind.find(this.maxSize - 1);
