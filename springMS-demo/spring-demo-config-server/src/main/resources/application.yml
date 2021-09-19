@@ -1,0 +1,6 @@
+server:
+  port: 9099
+spring:
+  cloud:
+    git:
+      uri:
