@@ -1,0 +1,4 @@
+server:
+  port: 10111
+  servlet:
+    context-path: /gateway/v1
