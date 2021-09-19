@@ -1,5 +1,5 @@
 server:
-  port: 9999
+  port: 9979
 spring:
   application:
     name: config-server
@@ -7,4 +7,11 @@ spring:
     config:
       server:
         git:
-          uri: http://github.com/jgottling/java-practice/tree/main/springMS-demo/configs
+          uri: https://github.com/jgottling/java-practice
+          default-label: main
+          clone-on-start: true
+          skip-ssl-validation: true
+          search-paths: /springMS-demo/configs
+          force-pull: true
+          delete-untracked-branches: true
+          basedir: target/configs
