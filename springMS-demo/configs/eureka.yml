@@ -1,3 +1,2 @@
 base-url: myMS-test
-server:
-  port: 10111
+port: 10111
