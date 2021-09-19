@@ -1,6 +1,10 @@
 server:
-  port: 9099
+  port: 9999
 spring:
+  application:
+    name: config-server
   cloud:
-    git:
-      uri:
+    config:
+      server:
+        git:
+          uri: http://github.com/jgottling/java-practice/tree/main/springMS-demo/configs
