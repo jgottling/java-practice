@@ -1,5 +1,5 @@
 server:
-  port: 9979
+  port: 9999
 spring:
   application:
     name: config-server
@@ -14,4 +14,3 @@ spring:
           search-paths: /springMS-demo/configs
           force-pull: true
           delete-untracked-branches: true
-          basedir: target/configs
