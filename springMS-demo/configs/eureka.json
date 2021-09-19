@@ -1,2 +1,4 @@
-base-url: 'myMS-test'
-port: 10111
+{
+  "base-url": 'myMS-test',
+  "port": 10111
+}
