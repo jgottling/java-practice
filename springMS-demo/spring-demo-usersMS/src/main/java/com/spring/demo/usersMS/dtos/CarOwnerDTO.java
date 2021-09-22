@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class CarOwnerDTO {
 
-  private int idNumber;
-  private int carId;
+  private long idNumber;
+  private long carId;
   private boolean isActive;
 
   public static CarOwnerDTO getOwnerDTOfromModel(CarOwner ownerModel) {

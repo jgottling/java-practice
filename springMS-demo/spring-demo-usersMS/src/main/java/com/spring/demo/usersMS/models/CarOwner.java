@@ -1,10 +1,14 @@
 package com.spring.demo.usersMS.models;
 
-import javax.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarOwner {
 
   private long idNumber;

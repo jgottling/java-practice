@@ -2,13 +2,12 @@ package com.spring.demo.usersMS.repos;
 
 import com.spring.demo.usersMS.models.CarOwner;
 import java.util.Random;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class CarOwnerRepo {
 
   public CarOwner getCarOwnerById(long ownerId) {
-    CarOwner carOwner = new CarOwner();
-    carOwner.setCarId(ownerId);
-    carOwner.setIdNumber(new Random(1000).nextLong());
-    return carOwner;
+    return new CarOwner(ownerId, new Random(1000).nextLong(), true);
   }
 }

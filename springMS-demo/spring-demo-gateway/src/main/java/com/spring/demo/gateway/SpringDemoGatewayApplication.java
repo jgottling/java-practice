@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SpringDemoGatewayApplication {
 
   private static final String baseURL = "http://httpbin.org:80";
+  private static final String usersMSURL = "http://localhost:usersMS:10222/users/v1";
 
   public static void main(String[] args) {
     SpringApplication.run(SpringDemoGatewayApplication.class, args);
@@ -26,7 +27,9 @@ public class SpringDemoGatewayApplication {
   @Bean
   public RouteLocator myRoutes(RouteLocatorBuilder routeLocatorBuilder) {
     return routeLocatorBuilder
-        .routes()
+
+        .routes().route("users_health", p -> p.path("/users/health").uri(usersMSURL + "/monitoring"))
+        .route("users_owners", p -> p.path("/users/owners/**").uri(usersMSURL + "/owners"))
         .route(predicateSpec -> predicateSpec.path("/get").uri(baseURL))
         .build();
   }
