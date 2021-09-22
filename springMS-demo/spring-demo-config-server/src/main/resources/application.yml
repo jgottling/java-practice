@@ -14,3 +14,23 @@ spring:
           search-paths: /springMS-demo/configs
           force-pull: true
           delete-untracked-branches: true
+
+management:
+  security:
+    enable: false
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics
+      base-path: /monitoring
+  endpoint:
+    health:
+      show-details: always
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+  client:
+    registryFetchIntervalSeconds: 5
+    service-url:
+      defaultZone: http://localhost:8761/eureka

@@ -1,8 +1,12 @@
 server:
-  port: 10111
+  port: 10222
   servlet:
-    context-path: /gateway/v1
+    context-path: /users/v1
 
+spring:
+  application:
+    name: usersMS
+        
 eureka:
   instance:
     leaseRenewalIntervalInSeconds: 10

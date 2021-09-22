@@ -1,0 +1,23 @@
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+
+spring:
+  application:
+    name: eureka
+
+server:
+  port: 8761
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics
+      base-path: /monitoring
+  endpoint:
+    health:
+      show-details: always
+  security:
+    enable: false

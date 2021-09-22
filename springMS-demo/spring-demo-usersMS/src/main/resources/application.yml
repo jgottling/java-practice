@@ -1,0 +1,7 @@
+spring:
+  config:
+    import: configserver:http://localhost:9999
+  application:
+    name: usersMS
+  profiles:
+    active: dev
