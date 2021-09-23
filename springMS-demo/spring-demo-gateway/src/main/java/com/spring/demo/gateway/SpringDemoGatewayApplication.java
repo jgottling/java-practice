@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SpringDemoGatewayApplication {
 
   private static final String baseURL = "http://httpbin.org:80";
-  private static final String usersMSURL = "http://localhost:usersMS:10222/users/v1";
+  private static final String usersMSURL = "http://usersMS/users/v1";
 
   public static void main(String[] args) {
     SpringApplication.run(SpringDemoGatewayApplication.class, args);
