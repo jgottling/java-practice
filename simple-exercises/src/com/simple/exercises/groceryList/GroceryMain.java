@@ -1,8 +1,9 @@
-package com.grocerylist;
+package com.simple.exercises.groceryList;
 
+import com.simple.exercises.groceryList.GroceryList.Item;
 import java.util.Scanner;
 
-public class Main {
+public class GroceryMain {
 
   private static final Scanner scanner = new Scanner(System.in);
   private static final GroceryList myList = new GroceryList("My list");
