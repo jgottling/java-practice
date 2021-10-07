@@ -2,7 +2,7 @@ package com.simple.exercises;
 
 import java.util.Scanner;
 
-class PowLoops {
+public class PowLoops {
   private static final Scanner scanner = new Scanner(System.in);
 
   public static void main(String []argh){

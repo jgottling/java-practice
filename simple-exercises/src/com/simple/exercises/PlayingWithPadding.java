@@ -1,6 +1,7 @@
 package com.simple.exercises;
 
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class PlayingWithPadding {
 
@@ -47,6 +48,7 @@ public class PlayingWithPadding {
     if (someString == null || someString.equals("")) {
       return false;
     }
+
     for (int i = 0; i < someString.length(); i++) {
       if (!Character.isLetter(someString.charAt(i))) {
         return false;

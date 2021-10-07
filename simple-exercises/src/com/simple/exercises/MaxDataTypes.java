@@ -2,7 +2,7 @@ package com.simple.exercises;
 
 import java.util.Scanner;
 
-class MaxDataTypes {
+public class MaxDataTypes {
   private static final Scanner scanner = new Scanner(System.in);
   private static final long minInt = Integer.MIN_VALUE;
   private static final long maxInt = Integer.MAX_VALUE;
