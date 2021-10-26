@@ -1,20 +1,25 @@
 package com.simple.exercises;
 
 import java.util.Scanner;
-import java.util.stream.Stream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlayingWithPadding {
 
+  //first input number of lines, then for each line input a string and a number, the output is a table
   public static void main(String[] args) {
-    MyInput[] inputs = new MyInput[3];
     Scanner sc = new Scanner(System.in);
-    for (int i = 0; i < 3; i++) {
-      String unsplitedString = sc.nextLine();
-      String[] splitedString = unsplitedString.split(" ");
-      String x = splitedString[1];
-      String s1 = splitedString[0];
-      if (intInputValid(x) && stringInputValid(s1)) {
-        inputs[i] = new MyInput(s1, x);
+    int numberOfInputs = sc.nextInt();
+    sc.nextLine();
+
+    MyInput[] inputs = new MyInput[numberOfInputs];
+
+    for (int i = 0; i < numberOfInputs; i++) {
+      String[] splitedString = sc.nextLine().split(" ");
+      String intInput = splitedString[1];
+      String stringInput = splitedString[0];
+      if (intInputValid(intInput) && stringInputValid(stringInput)) {
+        inputs[i] = new MyInput(stringInput, intInput);
       } else {
         sc.close();
         System.exit(-1);
@@ -26,16 +31,15 @@ public class PlayingWithPadding {
 
   private static void printUserInput(MyInput[] inputs) {
     System.out.println("================================");
-    for (int i = 0; i < 3; i++) {
-      String spacesPaddle = "";
-      int spaces = 15 - inputs[i].stringInput.length();
+    for (MyInput input : inputs) {
+      StringBuilder spacesPaddle = new StringBuilder();
+      int spaces = 15 - input.stringInput.length();
 
       int spacesNeeded = Math.max(spaces, 0);
       for (int j = 0; j <= spacesNeeded; j++) {
-        spacesPaddle += " ";
+        spacesPaddle.append(" ");
       }
-
-      System.out.println(inputs[i].stringInput + spacesPaddle + inputs[i].intInput);
+      System.out.println(input.stringInput + spacesPaddle + input.intInput);
     }
     System.out.println("================================");
   }
@@ -48,13 +52,12 @@ public class PlayingWithPadding {
     if (someString == null || someString.equals("")) {
       return false;
     }
+    Pattern pattern = Pattern.compile("[a-zA-Z]+");
+    Matcher matcher = pattern.matcher(someString);
 
-    for (int i = 0; i < someString.length(); i++) {
-      if (!Character.isLetter(someString.charAt(i))) {
-        return false;
-      }
-    }
-    return true;
+    if (!matcher.matches()) System.out.println("Invalid string input");
+    matcher.reset();
+    return matcher.matches();
   }
 
   private static boolean intInputValid(String someInt) {
@@ -63,7 +66,6 @@ public class PlayingWithPadding {
   }
 
   private static class MyInput {
-
     String stringInput;
     String intInput;
 

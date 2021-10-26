@@ -21,7 +21,6 @@ public class MaxDataTypes {
         if (longInput >= minLong && longInput < maxLong) System.out.println("* long");
       } catch (Exception e) {
         System.out.println(scanner.next() + " can't be fitted anywhere.");
-
       }
     }
   }

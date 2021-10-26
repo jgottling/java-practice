@@ -6,12 +6,11 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class EvenlySplittingStrings {
-  public static String getSmallestAndLargest(String s, int k) {
+  private static String getSmallestAndLargest(String s, int k) {
     String smallest = "";
     String largest = "";
 
-    List<String> splittedString = splitString(s, k);
-    List<String> sortedString = splittedString.stream().sorted(String::compareTo).collect(Collectors.toList());
+    List<String> sortedString = splitString(s, k).stream().sorted(String::compareTo).collect(Collectors.toList());
 
     smallest = sortedString.get(0);
     largest = sortedString.get(sortedString.size()-1);
@@ -35,14 +34,11 @@ public class EvenlySplittingStrings {
     return mySplitString;
   }
 
-
   public static void main(String[] args) {
     Scanner scan = new Scanner(System.in);
     String s = scan.nextLine();
     int k = scan.nextInt();
     scan.close();
-
     System.out.println(getSmallestAndLargest(s, k));
   }
-
 }
